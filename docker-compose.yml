@@ -1,0 +1,45 @@
+services:
+  postgres:
+    container_name: psql_container_books_project
+    image: postgres
+    environment:
+      POSTGRES_USER: realcj
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+    volumes:
+      - postgres_books_project:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_books_project
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  mail-dev:
+    container_name: maildev_books_project
+    image: maildev/maildev
+    ports:
+      - "1080:1080"  # HTTP Web UI
+      - "1025:1025"  # SMTP Server
+
+
+# TODO: Later add api container once it is built
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres_books_project:

@@ -1,0 +1,57 @@
+# TODO:-> Setup spring profiles & mail server before AWS deployment / CI-CD
+
+server:
+  servlet:
+    context-path: /api/v1/
+  port: 8080
+  error:
+    include-message: always
+
+
+spring:
+
+
+  servlet:
+    multipart:
+      # to set the maximum file size that can be uploaded in a multipart/form-data request in a Spring Boot application.
+      max-file-size: 50MB  # If a larger file is attempted to be uploaded, the application will throw a MaxUploadSizeExceededException.
+
+  application:
+    name: books-network
+
+  datasource:
+    password: password
+    url: jdbc:postgresql://localhost:5432/books-network
+    username: realcj
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+  mail:
+    host: localhost  # TODO: Change during production
+    port: 1025
+    username: realcj
+    password: password
+    properties:
+      mail:
+        smtp:
+          trust: "*"
+        auth: true
+        starttls:
+          enable: true
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+
+
+
+
+
+springdoc:
+  default-produces-media-type: application/json
