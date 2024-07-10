@@ -13,14 +13,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class BeansConfig {
 
-    private final UserDetailsService userDetailsService;
+    // dependency injection
+    private final UserDetailsService userDetailsService;  // we are using UserDetailsServiceImpl - refer to UserDetailsServiceImpl.java
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();  // for hashing passwords
     }
-
-
 
 
     @Bean

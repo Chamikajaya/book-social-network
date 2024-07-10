@@ -19,7 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
-    private final AuthenticationProvider authenticationProvider;
+    // dependency injection
+    private final AuthenticationProvider authenticationProvider;  // we are using DaoAuthenticationProvider - refer to BeansConfig.java 😊
     private final JwtAuthFilter jwtAuthFilter;
 
 
@@ -28,7 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(Customizer.withDefaults())
-                .csrf(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)  // disable CSRF since we are using JWT (Cross-Site Request Forgery)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(
                                         "/auth/**",
@@ -46,10 +47,10 @@ public class SecurityConfig {
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // do not store session state
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // do not store session state since we are using JWT
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // add the JWT filter before the UsernamePasswordAuthenticationFilter
 
-
+        return httpSecurity.build();
     }
 }
