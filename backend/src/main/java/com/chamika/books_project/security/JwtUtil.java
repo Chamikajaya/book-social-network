@@ -18,10 +18,10 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
 
-    @Value("${application.security.jwt.secret-key}")
+    @Value("${application.security.jwt.expiration-time}")
     private long jwtExpirationTime;
 
-    @Value("${application.security.jwt.expiration-time}")
+    @Value("${application.security.jwt.secret-key}")
     private String secretKey;  //  for signing and verifying JWTs
 
 
