@@ -36,15 +36,9 @@ public class Role {
 
     // all the users with this role
     @ManyToMany(mappedBy = "roles")
-    @JsonIgnore  // when an instance of Role is serialized to JSON, the users field will not be included in the resulting JSON.
+    @JsonIgnore
+    // when an instance of Role is serialized to JSON, the users field will not be included in the resulting JSON.
     private List<User> users;
-
-
-
-
-
-
-
 
 
     // audit fields -->

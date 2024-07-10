@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-//  AuditingEntityListener is a class provided by Spring Data JPA. It's a callback class that's used to automatically set values for certain fields, such as createdDate, lastModifiedDate, createdBy, and lastModifiedBy, when we persist or update JPA entities.
 @Table(name = "t_user")
 @Builder
 @Data
