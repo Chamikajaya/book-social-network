@@ -22,13 +22,16 @@ public class JwtUtil {
     private long jwtExpirationTime;
 
     @Value("${application.security.jwt.expiration-time}")
-    private String secretKey;
+    private String secretKey;  //  for signing and verifying JWTs
 
 
+    // convenience method that generates a token with no extra claims.
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
+
+    // convenience method that generates a token with extra claims.
     public String generateToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails
@@ -42,6 +45,8 @@ public class JwtUtil {
             UserDetails userDetails,
             long jwtExpirationTime
     ) {
+
+        // get the roles of the user
         var authorities = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
@@ -49,11 +54,11 @@ public class JwtUtil {
 
 
         return Jwts.builder()
-                .claims(extraClaims)
+                .claims(extraClaims)  // set up any extra claims
                 .subject(userDetails.getUsername())  // subject in the token will be the username - email
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationTime))
-                .claim("authorities", authorities)
+                .claim("authorities", authorities)  // * sets a custom claim "authorities" with the roles of the user
                 .signWith(getSigningKey())
                 .compact();
     }
@@ -66,12 +71,13 @@ public class JwtUtil {
     }
 
     public boolean isTokenExpired(String token) {
-        return extractAllClaims(token, Claims::getExpiration).before(new Date());
+        // Extracts the expiration claim and compares it to the current time.
+        return extractAllClaims(token, Claims::getExpiration).before(new Date());  // refer the builder above
 
     }
 
     public String extractUsername(String token) {
-        return extractAllClaims(token, Claims::getSubject);
+        return extractAllClaims(token, Claims::getSubject);  // refer the builder above
     }
 
     public <T> T extractAllClaims(String token, Function<Claims, T> claimsResolver) {
