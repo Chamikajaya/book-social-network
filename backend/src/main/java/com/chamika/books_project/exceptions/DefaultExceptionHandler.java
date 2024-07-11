@@ -30,4 +30,21 @@ public class DefaultExceptionHandler {
 
     }
 
+    @ExceptionHandler(EmailAlreadyTakenException.class)
+    public ResponseEntity<APIError> handleException(
+            EmailAlreadyTakenException e,
+            HttpServletRequest request
+    ) {
+
+        log.error("Bad request exception occurred", e);
+        APIError apiError = new APIError(
+                request.getRequestURL().toString(),
+                e.getMessage(),
+                HttpStatus.CONFLICT.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+
+    }
+
 }

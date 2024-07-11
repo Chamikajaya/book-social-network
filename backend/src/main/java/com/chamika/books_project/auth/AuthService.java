@@ -2,6 +2,7 @@ package com.chamika.books_project.auth;
 
 import com.chamika.books_project.emails.EmailService;
 import com.chamika.books_project.emails.EmailTemplateName;
+import com.chamika.books_project.exceptions.EmailAlreadyTakenException;
 import com.chamika.books_project.role.RoleRepository;
 import com.chamika.books_project.token.Token;
 import com.chamika.books_project.token.TokenRepository;
@@ -34,6 +35,11 @@ public class AuthService {
 
     public void registerUser(RegisterRequestBody registerRequestBody) throws MessagingException {
 
+        // check whether the email is already registered
+        if (userRepository.existsByEmail(registerRequestBody.email())) {
+            throw new EmailAlreadyTakenException("Email is already taken");
+        }
+
         User user = User.builder()
                 .firstName(registerRequestBody.firstName())
                 .lastName(registerRequestBody.lastName())
@@ -43,6 +49,7 @@ public class AuthService {
                 .isAccountLocked(false)
                 .isEnabled(false)  // since user has not verified the email
                 .build();
+
         userRepository.save(user);
 
         // send verification email to the user
@@ -56,12 +63,11 @@ public class AuthService {
                 user.getFullName(),
                 EmailTemplateName.ACTIVATE_ACCOUNT,
                 activationUrl,
-                generateAndSaveVerificationTokenToDb(user),
+                verificationToken,
                 "Activate your account"
         );
     }
 
-    ;
 
     private String generateAndSaveVerificationTokenToDb(User user) {
 

@@ -41,9 +41,6 @@ public class User implements Principal, UserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
-    private LocalDate dob;
-
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -65,9 +62,9 @@ public class User implements Principal, UserDetails {
     @Column(nullable = false, updatable = false)
     private LocalDate createdDate;
 
-    @LastModifiedDate
-    @Column(nullable = false, insertable = false)
-    private LocalDateTime lastModifiedDate;
+//    @LastModifiedDate
+//    @Column(nullable = false, insertable = false)
+//    private LocalDateTime lastModifiedDate;
 
 
     @Override

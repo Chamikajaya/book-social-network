@@ -47,7 +47,7 @@ public class Role {
     private LocalDate createdDate;
 
     @LastModifiedDate
-    @Column(nullable = false, insertable = false)
+    @Column( insertable = false)
     private LocalDateTime lastModifiedDate;
 
 }
