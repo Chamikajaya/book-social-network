@@ -58,11 +58,9 @@ public class Book {
     private User owner;
 
     @OneToMany(mappedBy = "book")
-    @JoinColumn(name = "feedback_id")
     private List<Feedback> feedbacks;
 
     @OneToMany(mappedBy = "book")
-    @JoinColumn(name = "transaction_id")
     private List<BookTransaction> transactions;
 
 
