@@ -4,6 +4,7 @@ import com.chamika.books_project.emails.EmailService;
 import com.chamika.books_project.emails.EmailTemplateName;
 import com.chamika.books_project.exceptions.EmailAlreadyTakenException;
 import com.chamika.books_project.role.RoleRepository;
+import com.chamika.books_project.security.JwtUtil;
 import com.chamika.books_project.token.Token;
 import com.chamika.books_project.token.TokenRepository;
 import com.chamika.books_project.user.User;
@@ -11,6 +12,7 @@ import com.chamika.books_project.user.UserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,9 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -102,4 +107,6 @@ public class AuthService {
     }
 
 
+    public AuthResponseBody login(AuthRequestBody token) {
+    }
 }
