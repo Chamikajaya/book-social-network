@@ -1,7 +1,9 @@
 package com.chamika.books_project.user;
 
 
+import com.chamika.books_project.book.Book;
 import com.chamika.books_project.role.Role;
+import com.chamika.books_project.transactions.BookTransaction;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,6 +57,12 @@ public class User implements Principal, UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER)  // eager fetch is used to load all the roles of a user when the user is loaded
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookTransaction> bookTransactions;
 
 
     // audit fields -->

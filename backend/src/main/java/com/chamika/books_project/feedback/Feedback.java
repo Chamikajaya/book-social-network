@@ -1,6 +1,7 @@
 package com.chamika.books_project.feedback;
 
 
+import com.chamika.books_project.book.Book;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +35,11 @@ public class Feedback {
 
     @Column(nullable = false)
     private String comment;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)
+    private Book book;
+
 
     // audit fields -->
     @CreatedDate

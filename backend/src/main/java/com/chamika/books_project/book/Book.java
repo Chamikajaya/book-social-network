@@ -1,6 +1,9 @@
 package com.chamika.books_project.book;
 
+import com.chamika.books_project.feedback.Feedback;
 import com.chamika.books_project.role.Role;
+import com.chamika.books_project.transactions.BookTransaction;
+import com.chamika.books_project.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +18,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -49,6 +53,19 @@ public class Book {
 
     private Boolean isShareable = true;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
+    @OneToMany(mappedBy = "book")
+    @JoinColumn(name = "feedback_id")
+    private List<Feedback> feedbacks;
+
+    @OneToMany(mappedBy = "book")
+    @JoinColumn(name = "transaction_id")
+    private List<BookTransaction> transactions;
+
+
     // audit fields -->
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -65,8 +82,6 @@ public class Book {
     @LastModifiedBy
     @Column(insertable = false)
     private Integer lastModifiedBy;  // user id of the user who last modified the book
-
-
 
 
 }
