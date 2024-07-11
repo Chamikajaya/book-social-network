@@ -13,11 +13,14 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +36,7 @@ public class AuthService {
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -107,6 +111,27 @@ public class AuthService {
     }
 
 
-    public AuthResponseBody login(AuthRequestBody token) {
+    public AuthResponseBody login(AuthRequestBody authRequestBody) {
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authRequestBody.email(),
+                        authRequestBody.password()
+                )
+        );
+
+        var claims = new HashMap<String, Object>();
+
+        // getPrincipal() returns a Object type, so we need to cast it to Customer
+        User user = (User) authentication.getPrincipal();
+
+        claims.put("username", user.getEmail());
+
+        String jwtToken = jwtUtil.generateToken(claims, user);
+
+        return new AuthResponseBody(jwtToken);
+
+
+
     }
 }
