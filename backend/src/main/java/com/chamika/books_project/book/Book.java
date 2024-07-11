@@ -1,0 +1,72 @@
+package com.chamika.books_project.book;
+
+import com.chamika.books_project.role.Role;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "t_book")
+@Builder
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Book {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "book_id_sequence")
+    @SequenceGenerator(name = "book_id_sequence", sequenceName = "book_id_sequence", allocationSize = 1)
+    private Integer id;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String authorName;
+
+    @Column(nullable = false)
+    private String isbn;
+
+    @Column(nullable = false)
+    private String synopsis;
+
+    private String coverImage;
+
+    private Boolean isArchived = false;
+
+    private Boolean isShareable = true;
+
+    // audit fields -->
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDate createdDate;
+
+    @LastModifiedDate
+    @Column(insertable = false)
+    private LocalDateTime lastModifiedDate;
+
+    @CreatedBy
+    @Column(nullable = false, updatable = false)
+    private Integer createdBy;  // user id of the user who created the book
+
+    @LastModifiedBy
+    @Column(insertable = false)
+    private Integer lastModifiedBy;  // user id of the user who last modified the book
+
+
+
+
+}

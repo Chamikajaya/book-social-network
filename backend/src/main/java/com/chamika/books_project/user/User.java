@@ -62,9 +62,9 @@ public class User implements Principal, UserDetails {
     @Column(nullable = false, updatable = false)
     private LocalDate createdDate;
 
-//    @LastModifiedDate
-//    @Column(nullable = false, insertable = false)
-//    private LocalDateTime lastModifiedDate;
+    @LastModifiedDate
+    @Column(insertable = false)
+    private LocalDateTime lastModifiedDate;
 
 
     @Override
