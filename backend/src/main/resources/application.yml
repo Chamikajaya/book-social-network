@@ -52,7 +52,7 @@ spring:
 application:
   security:
     jwt:
-      secret-key: 2HZoCUHRy14rfjlD5Zn9LbGdmkuHvYnE2HZoCUHRy14rfjlD5Zn9LbGdmkuHvYnE2HZoCUHRy14rfjlD5Zn9LbGdmkuHvYnE2HZoCUHRy14rfjlD5Zn9LbGdmkuHvYnE2HZoCUHRy14rfjlD5Zn9LbGdmkuHvYnE
+      secret-key: eyJhbGciOiJIUzI1NiJ9eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMDE0OTY1NiwiaWF0IjoxNzIwMTQ5NjU2fQwQOBkMWm7RQoUN58iShzpO0uo2ACfKMaHNUulq9owQ
       expiration-time: 86400000  # 1 day
 
   mailing:
