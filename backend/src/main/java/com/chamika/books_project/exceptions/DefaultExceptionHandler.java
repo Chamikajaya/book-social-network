@@ -47,4 +47,21 @@ public class DefaultExceptionHandler {
 
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<APIError> handleException(
+            ResourceNotFoundException e,
+            HttpServletRequest request
+    ) {
+
+        log.error("Bad request exception occurred", e);
+        APIError apiError = new APIError(
+                request.getRequestURL().toString(),
+                e.getMessage(),
+                HttpStatus.NOT_FOUND.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+
+    }
+
 }

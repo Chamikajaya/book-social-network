@@ -2,6 +2,8 @@ package com.chamika.books_project.auth;
 
 import com.chamika.books_project.emails.EmailService;
 import com.chamika.books_project.emails.EmailTemplateName;
+import com.chamika.books_project.exceptions.BadRequestException;
+import com.chamika.books_project.exceptions.ResourceNotFoundException;
 import com.chamika.books_project.exceptions.EmailAlreadyTakenException;
 import com.chamika.books_project.role.RoleRepository;
 import com.chamika.books_project.security.JwtUtil;
@@ -131,6 +133,37 @@ public class AuthService {
 
         return new AuthResponseBody(jwtToken);
 
+
+    }
+
+    public void verifyEmail(String token) throws MessagingException {
+
+        // first checking whether the token is valid
+        Token tokenFromDb = tokenRepository.findByToken(token)
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid activation token"));
+
+        // checking whether the token has been validated already - otherwise the user can validate the token multiple times
+        if (tokenFromDb.getValidatedAt() != null) {
+            throw new BadRequestException("Token has been already validated.");
+        }
+
+        // if the token is expired
+        if (LocalDateTime.now().isAfter(tokenFromDb.getExpiresAt())) {
+            sendVerificationEmail(tokenFromDb.getUser());
+            throw new RuntimeException("Current activation token is expired. A new token has been sent to your email");
+        }
+
+        User user = userRepository.findById(tokenFromDb.getUser().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        // set the user as enabled
+        user.setIsEnabled(true);
+
+        tokenFromDb.setValidatedAt(LocalDateTime.now());
+
+        // saving the user and the token
+        userRepository.save(user);
+        tokenRepository.save(tokenFromDb);
 
 
     }

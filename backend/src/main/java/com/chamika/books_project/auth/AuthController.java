@@ -35,5 +35,10 @@ public class AuthController {
                 .body(authResponseBody);
     }
 
+    @GetMapping("/verify-email")
+    public void verifyEmail(@RequestParam String token) throws MessagingException {
+        authService.verifyEmail(token);
+    }
+
 
 }
