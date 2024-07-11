@@ -114,7 +114,7 @@ public class User implements Principal, UserDetails {
     }
 
     // for getting the full name
-    private String getFullName() {
+    public String getFullName() {
         return this.firstName + " " + this.lastName;
     }
 }
