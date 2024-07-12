@@ -1,7 +1,6 @@
 package com.chamika.books_project.book;
 
 import com.chamika.books_project.feedback.Feedback;
-import com.chamika.books_project.role.Role;
 import com.chamika.books_project.transactions.BookTransaction;
 import com.chamika.books_project.user.User;
 import jakarta.persistence.*;
@@ -54,7 +53,7 @@ public class Book {
     private Boolean isShareable = true;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false)  // * for the relationship between book and user, Book entity is the owning side 😊
     private User owner;
 
     @OneToMany(mappedBy = "book")

@@ -31,11 +31,11 @@ public class BookTransaction {
 
 
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
+    @JoinColumn(name = "book_id", nullable = false)  // * for the relationship between transaction and book, BookTransaction entity is the owning side
     private Book book;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)  // * for the relationship between transaction and user, BookTransaction entity is the owning side
     private User user;
 
 

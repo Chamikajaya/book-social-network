@@ -37,7 +37,7 @@ public class Feedback {
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable = false)
+    @JoinColumn(name = "book_id", nullable = false)  // * for the relationship between book and feedback, Feedback entity is the owning side ??
     private Book book;
 
 
