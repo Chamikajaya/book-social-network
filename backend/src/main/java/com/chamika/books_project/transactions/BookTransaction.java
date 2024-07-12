@@ -7,7 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -37,6 +41,15 @@ public class BookTransaction {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)  // * for the relationship between transaction and user, BookTransaction entity is the owning side
     private User user;
+
+    // audit fields -->
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdDateTime;
+
+    @LastModifiedDate
+    @Column(insertable = false)
+    private LocalDateTime lastModifiedDate;
 
 
 }

@@ -53,7 +53,8 @@ public class Book {
     private Boolean isShareable = true;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)  // * for the relationship between book and user, Book entity is the owning side 😊
+    @JoinColumn(name = "owner_id", nullable = false)
+    // * for the relationship between book and user, Book entity is the owning side 😊
     private User owner;
 
     @OneToMany(mappedBy = "book")
@@ -66,7 +67,7 @@ public class Book {
     // audit fields -->
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDate createdDate;
+    private LocalDateTime createdDateTime;
 
     @LastModifiedDate
     @Column(insertable = false)
@@ -80,5 +81,16 @@ public class Book {
     @Column(insertable = false)
     private Integer lastModifiedBy;  // user id of the user who last modified the book
 
+    @Transient  // to indicate that a field is not to be persisted in the database
+    public double getAverageRating() {
 
+        if (feedbacks == null || feedbacks.isEmpty()) {
+            return 0;
+        }
+
+        double average = feedbacks.stream().mapToDouble(Feedback::getRating).average().orElse(0);
+        return Math.round(average * 10) / 10.0;  // round to 1 decimal place
+
+
+    }
 }

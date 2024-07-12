@@ -17,4 +17,19 @@ public class BookMapper {
                 .build();
     }
 
+    public BookResponseBody toBookResponseBody(Book book) {
+        return new BookResponseBody(
+                book.getId(),
+                book.getTitle(),
+                book.getAuthorName(),
+                book.getIsbn(),
+                book.getSynopsis(),
+                book.getIsShareable(),
+                book.getIsArchived(),
+                book.getOwner().getFullName(),
+// TODO: Implement cover image
+//                book.getCoverImage(),
+                book.getAverageRating()
+        );
+    }
 }
