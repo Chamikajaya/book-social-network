@@ -2,6 +2,8 @@ package com.chamika.books_project.book;
 
 import com.chamika.books_project.exceptions.ResourceNotFoundException;
 import com.chamika.books_project.shared.PageResponse;
+import com.chamika.books_project.transactions.BookTransaction;
+import com.chamika.books_project.transactions.BookTransactionRepository;
 import com.chamika.books_project.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ public class BookService {
 
     private final BookMapper bookMapper;
     private final BookRepository bookRepository;
+    private final BookTransactionRepository bookTransactionRepository;
 
     public void addBook(BookSaveRequestBody bookSaveRequest, Authentication auth) {
 
@@ -99,6 +102,66 @@ public class BookService {
         );
 
 
+    }
+
+    public PageResponse<BorrowedBookResponseBody> getAllBorrowedBooksOfUser(Integer page, Integer size, Authentication auth) {
+
+        User user = (User) auth.getPrincipal();
+
+        // creating the pageable object
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdDateTime").descending()
+        );
+
+        Page<BookTransaction> transactionsPageForThisUser = bookTransactionRepository.findAllTransactionsRelatedToThisUser(pageable, user.getId());
+
+        List<BorrowedBookResponseBody> borrowedBookResponse = transactionsPageForThisUser.stream()
+                .map(bookMapper::toBorrowedBookResponseBody)
+                .toList();
+
+        return new PageResponse<>(
+                borrowedBookResponse,
+                transactionsPageForThisUser.getNumber(),  // current page number
+                transactionsPageForThisUser.getSize(),  // size of the page
+                transactionsPageForThisUser.getTotalElements(),
+                transactionsPageForThisUser.getTotalPages(),
+                transactionsPageForThisUser.isFirst(),  // whether the current page is the first page
+                transactionsPageForThisUser.isLast()
+        );
+
+
+    }
+
+    // TODO: check this method in controller & TransactionHistoryRepo ==>
+
+    public PageResponse<BorrowedBookResponseBody> getAllReturnedBooksOfUser(Integer page, Integer size, Authentication auth) {
+
+        User user = (User) auth.getPrincipal();
+
+        // creating the pageable object
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdDateTime").descending()
+        );
+
+        Page<BookTransaction> transactionsPageForBooksOfThisUser = bookTransactionRepository.findAllTransactionsRelatedToBooksOwnedByThisUser(pageable, user.getId());
+
+        List<BorrowedBookResponseBody> borrowedBookResponse = transactionsPageForBooksOfThisUser.stream()
+                .map(bookMapper::toBorrowedBookResponseBody)
+                .toList();
+
+        return new PageResponse<>(
+                borrowedBookResponse,
+                transactionsPageForBooksOfThisUser.getNumber(),  // current page number
+                transactionsPageForBooksOfThisUser.getSize(),  // size of the page
+                transactionsPageForBooksOfThisUser.getTotalElements(),
+                transactionsPageForBooksOfThisUser.getTotalPages(),
+                transactionsPageForBooksOfThisUser.isFirst(),  // whether the current page is the first page
+                transactionsPageForBooksOfThisUser.isLast()
+        );
 
 
     }

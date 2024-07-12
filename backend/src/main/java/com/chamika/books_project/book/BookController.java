@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("books")
 @RequiredArgsConstructor
@@ -50,6 +48,30 @@ public class BookController {
 
     ) {
         return bookService.getBooksByOwner(page, size, auth);
+    }
+
+    @GetMapping("/borrowed")
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<BorrowedBookResponseBody> getAllBorrowedBooksOfUser(
+            @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(name = "size", defaultValue = "8", required = false) Integer size,
+            Authentication auth
+
+    ) {
+        return bookService.getAllBorrowedBooksOfUser(page, size, auth);
+    }
+
+
+    // TODO:- Check this controller
+    @GetMapping("/returned")
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<BorrowedBookResponseBody> getAllReturnedBooksOfUser(
+            @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(name = "size", defaultValue = "8", required = false) Integer size,
+            Authentication auth
+
+    ) {
+        return bookService.getAllReturnedBooksOfUser(page, size, auth);
     }
 
 

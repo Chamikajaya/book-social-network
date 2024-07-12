@@ -1,5 +1,6 @@
 package com.chamika.books_project.book;
 
+import com.chamika.books_project.transactions.BookTransaction;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,4 +33,19 @@ public class BookMapper {
                 book.getAverageRating()
         );
     }
+
+    public BorrowedBookResponseBody toBorrowedBookResponseBody(BookTransaction bookTransaction) {
+        return new BorrowedBookResponseBody(
+                bookTransaction.getId(),
+                bookTransaction.getBook().getTitle(),
+                bookTransaction.getBook().getAuthorName(),
+                bookTransaction.getBook().getIsbn(),
+                bookTransaction.getBook().getAverageRating(),
+                bookTransaction.getIsReturned(),
+                bookTransaction.getIsReturnApproved()
+
+        );
+    }
+
+
 }
