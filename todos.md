@@ -1,7 +1,8 @@
 ### TODOs:
 
 * Implement Image Upload
-**Rethink about getAllBorrowedBooksOfUser & getAllReturnedBooksOfUser**
+* check how to reduce code duplication for updating shareable & archived status
+* **Rethink about getAllBorrowedBooksOfUser & getAllReturnedBooksOfUser**
 
 
 * Add a custom exception to handle validation errors

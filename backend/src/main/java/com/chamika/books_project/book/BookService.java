@@ -105,6 +105,8 @@ public class BookService {
 
     }
 
+    // ***************************************************************************************************************
+
     public PageResponse<BorrowedBookResponseBody> getAllBorrowedBooksOfUser(Integer page, Integer size, Authentication auth) {
 
         User user = (User) auth.getPrincipal();
@@ -164,9 +166,11 @@ public class BookService {
                 transactionsPageForBooksOfThisUser.isLast()
         );
 
-
     }
 
+    // ***************************************************************************************************************
+
+    //    TODO: check how to reduce code duplication for updating shareable & archived status
     public void updateShareableStatus(Integer bookId, Authentication authentication) {
 
         // check whether the book exists according to given bookId
@@ -184,6 +188,24 @@ public class BookService {
         book.setIsShareable(!book.getIsShareable());
 
         bookRepository.save(book);
+    }
 
+
+    public void updateArchivedStatus(Integer bookId, Authentication authentication) {
+        // check whether the book exists according to given bookId
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("The book with id " + bookId + " not found"));
+
+
+        // check whether the targeted book is indeed owned by this user
+        User user = (User) authentication.getPrincipal();
+
+        if (!user.getId().equals(book.getOwner().getId())) {
+            throw new IllegalOperationPerformException("You are not allowed to update someone else's book");
+        }
+        // update & save back to the db
+        book.setIsArchived(!book.getIsArchived());
+
+        bookRepository.save(book);
     }
 }

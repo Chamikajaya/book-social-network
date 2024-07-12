@@ -74,11 +74,19 @@ public class BookController {
         return bookService.getAllReturnedBooksOfUser(page, size, auth);
     }
 
-    @PatchMapping("/shareable/{bookId}")
+    @PatchMapping("/shareable/{bookId}")  // no need to provide any body since we are just toggling the status
     @ResponseStatus(HttpStatus.OK)
     public void updateShareableStatus(@PathVariable("bookId") Integer bookId, Authentication authentication) {
         bookService.updateShareableStatus(bookId, authentication);
     }
+
+    @PatchMapping("/archived/{bookId}")  // no need to provide any body since we are just toggling the status
+    @ResponseStatus(HttpStatus.OK)
+    public void updateArchivedStatus(@PathVariable("bookId") Integer bookId, Authentication authentication) {
+        bookService.updateArchivedStatus(bookId, authentication);
+    }
+
+
 
 
 
