@@ -1,5 +1,6 @@
 package com.chamika.books_project.book;
 
+import com.chamika.books_project.exceptions.IllegalOperationPerformException;
 import com.chamika.books_project.exceptions.ResourceNotFoundException;
 import com.chamika.books_project.shared.PageResponse;
 import com.chamika.books_project.transactions.BookTransaction;
@@ -163,6 +164,26 @@ public class BookService {
                 transactionsPageForBooksOfThisUser.isLast()
         );
 
+
+    }
+
+    public void updateShareableStatus(Integer bookId, Authentication authentication) {
+
+        // check whether the book exists according to given bookId
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("The book with id " + bookId + " not found"));
+
+
+        // check whether the targeted book is indeed owned by this user
+        User user = (User) authentication.getPrincipal();
+
+        if (!user.getId().equals(book.getOwner().getId())) {
+            throw new IllegalOperationPerformException("You are not allowed to update someone else's book");
+        }
+        // update & save back to the db
+        book.setIsShareable(!book.getIsShareable());
+
+        bookRepository.save(book);
 
     }
 }

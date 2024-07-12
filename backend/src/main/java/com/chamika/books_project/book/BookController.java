@@ -25,7 +25,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public BookResponseBody getBook(@PathVariable Integer id) {
+    public BookResponseBody getBook(@PathVariable("id") Integer id) {
         return bookService.getBookById(id);
     }
 
@@ -73,6 +73,15 @@ public class BookController {
     ) {
         return bookService.getAllReturnedBooksOfUser(page, size, auth);
     }
+
+    @PatchMapping("/shareable/{bookId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateShareableStatus(@PathVariable("bookId") Integer bookId, Authentication authentication) {
+        bookService.updateShareableStatus(bookId, authentication);
+    }
+
+
+
 
 
 }

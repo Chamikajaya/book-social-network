@@ -50,6 +50,15 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(IllegalOperationPerformException.class)
+    public ResponseEntity<APIError> handleException(IllegalOperationPerformException e, HttpServletRequest request) {
+        log.error("Bad Credentials provided ", e);
+
+        APIError apiError = new APIError(request.getRequestURI(), e.getMessage(), HttpStatus.FORBIDDEN.value(), LocalDateTime.now());
+
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
+
 
 
     // * Catch all exceptions handler

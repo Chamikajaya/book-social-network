@@ -1,7 +1,7 @@
 ### TODOs:
 
 * Implement Image Upload
-* 
+**Rethink about getAllBorrowedBooksOfUser & getAllReturnedBooksOfUser**
 
 
 * Add a custom exception to handle validation errors

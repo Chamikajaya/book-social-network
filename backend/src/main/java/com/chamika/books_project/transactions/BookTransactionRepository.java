@@ -1,6 +1,5 @@
 package com.chamika.books_project.transactions;
 
-import com.chamika.books_project.book.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +12,7 @@ public interface BookTransactionRepository extends JpaRepository<BookTransaction
             """
             SELECT bookTransaction
             FROM BookTransaction bookTransaction
-            WHERE bookTransaction.user.id = :userId 
+            WHERE bookTransaction.user.id = :userId
             """
     )
     Page<BookTransaction> findAllTransactionsRelatedToThisUser(Pageable pageable, Integer userId);
@@ -23,7 +22,7 @@ public interface BookTransactionRepository extends JpaRepository<BookTransaction
             """
             SELECT bookTransaction
             FROM BookTransaction bookTransaction
-            WHERE bookTransaction.book.owner.id = :userid
+            WHERE bookTransaction.book.owner.id = :userId
             """
     )
     Page<BookTransaction> findAllTransactionsRelatedToBooksOwnedByThisUser(Pageable pageable, Integer userId);
