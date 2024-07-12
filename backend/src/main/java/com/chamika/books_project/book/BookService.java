@@ -208,4 +208,47 @@ public class BookService {
 
         bookRepository.save(book);
     }
+
+
+    public void borrowABook(Integer bookId, Authentication authentication) {
+
+        // check whether the bookId is valid
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("The book with id " + bookId + " not found"));
+
+        // check whether the targeted book's owner is current user
+        User user = (User) authentication.getPrincipal();
+
+        if (user.getId().equals(book.getOwner().getId())) {
+            throw new IllegalOperationPerformException("You can not borrow your own book !");
+        }
+
+
+        // check whether the book is archived / shareable
+        if (book.getIsArchived() || !book.getIsShareable()) {
+            throw new IllegalOperationPerformException("The book you asked is either archived or currently set as not shareable by owner. Please try again later. ");
+        }
+
+        // check whether the book is already borrowed by this particular user and not returned yet or the return not approved yet by the owner
+        if (bookTransactionRepository.isTheBookAlreadyBorrowedByCurrUserAndNotReturned(bookId, user.getId())) {
+            throw new IllegalOperationPerformException("You have not returned the book yet, or the return has not yet been approved by the book owner.");
+        }
+
+        // check whether the book is borrowed by some other user
+        if (bookTransactionRepository.isTheBookAlreadyBorrowedBySomeOtherAndNotReturned(bookId, user.getId())) {
+            throw new IllegalOperationPerformException("This book is already borrowed by someone else. Try again later ");
+        }
+
+        // save the transaction details to db
+        BookTransaction bookTransaction = BookTransaction.builder()
+                .isReturned(false)
+                .isReturnApproved(false)
+                .book(book)
+                .user(user)
+                .build();
+
+        bookTransactionRepository.save(bookTransaction);
+    }
+
+
 }

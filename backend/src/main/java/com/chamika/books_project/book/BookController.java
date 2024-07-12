@@ -80,11 +80,17 @@ public class BookController {
         bookService.updateShareableStatus(bookId, authentication);
     }
 
-    @PatchMapping("/archived/{bookId}")  // no need to provide any body since we are just toggling the status
+    @PatchMapping("/archived/{bookId}")  // no need to provide any, body since we are just toggling the status
     @ResponseStatus(HttpStatus.OK)
     public void updateArchivedStatus(@PathVariable("bookId") Integer bookId, Authentication authentication) {
         bookService.updateArchivedStatus(bookId, authentication);
     }
+
+    @PostMapping("/borrow/{bookId}")
+    public void borrowABook(@PathVariable("bookId") Integer bookId, Authentication authentication) {
+        bookService.borrowABook(bookId, authentication);
+    }
+
 
 
 

@@ -2,6 +2,7 @@
 
 * Implement Image Upload
 * check how to reduce code duplication for updating shareable & archived status
+* Fix duplicate books add
 * **Rethink about getAllBorrowedBooksOfUser & getAllReturnedBooksOfUser**
 
 

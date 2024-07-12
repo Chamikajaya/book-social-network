@@ -27,4 +27,29 @@ public interface BookTransactionRepository extends JpaRepository<BookTransaction
     )
     Page<BookTransaction> findAllTransactionsRelatedToBooksOwnedByThisUser(Pageable pageable, Integer userId);
 
+
+    @Query(
+            """
+            SELECT CASE WHEN COUNT(bookTransaction) > 0 THEN true ELSE false END
+            FROM BookTransaction bookTransaction
+            WHERE bookTransaction.book.id = :bookId
+            AND bookTransaction.user.id = :userId
+            AND (bookTransaction.isReturned = false
+            OR bookTransaction.isReturnApproved = false)
+            """
+    )
+    Boolean isTheBookAlreadyBorrowedByCurrUserAndNotReturned(Integer bookId, Integer userId);
+
+    @Query(
+            """
+            SELECT CASE WHEN COUNT(bookTransaction) > 0 THEN true ELSE false END
+            FROM BookTransaction bookTransaction
+            WHERE bookTransaction.book.id = :bookId
+            AND bookTransaction.user.id != :userId
+            AND (bookTransaction.isReturned = false
+            OR bookTransaction.isReturnApproved = false)
+            """
+    )
+    Boolean isTheBookAlreadyBorrowedBySomeOtherAndNotReturned(Integer bookId, Integer userId);
+
 }
