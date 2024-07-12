@@ -41,5 +41,16 @@ public class BookController {
         return bookService.getAllBooksPaginated(page, size, auth);
     }
 
+    @GetMapping("/owner")
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<BookResponseBody> getAllBooksOfAOwner(
+            @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
+            @RequestParam(name = "size", defaultValue = "8", required = false) Integer size,
+            Authentication auth
+
+    ) {
+        return bookService.getBooksByOwner(page, size, auth);
+    }
+
 
 }

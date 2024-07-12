@@ -12,11 +12,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BookService {
+
+    // TODO: check whether code redundancy can be minimized regarding pagination
 
     private final BookMapper bookMapper;
     private final BookRepository bookRepository;
@@ -67,6 +68,37 @@ public class BookService {
                 bookPage.isFirst(),  // whether the current page is the first page
                 bookPage.isLast()
         );
+
+    }
+
+    public PageResponse<BookResponseBody> getBooksByOwner(Integer page, Integer size, Authentication auth) {
+
+        User user = (User) auth.getPrincipal();
+
+        // creating the pageable object
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdDateTime").descending()
+        );
+
+        Page<Book> bookPageOfUser = bookRepository.findAllBooksByOwner(pageable, user.getId());
+
+        List<BookResponseBody> bookResponse = bookPageOfUser.stream()
+                .map(bookMapper::toBookResponseBody)
+                .toList();
+
+        return new PageResponse<>(
+                bookResponse,
+                bookPageOfUser.getNumber(),  // current page number
+                bookPageOfUser.getSize(),  // size of the page
+                bookPageOfUser.getTotalElements(),
+                bookPageOfUser.getTotalPages(),
+                bookPageOfUser.isFirst(),  // whether the current page is the first page
+                bookPageOfUser.isLast()
+        );
+
+
 
 
     }

@@ -18,4 +18,14 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             """
     )
     Page<Book> findAllDisplayableBooks(Pageable pageable, Integer userId);  // * Spring Data JPA uses the Pageable object internally to construct the appropriate SQL query for pagination, which includes applying the LIMIT and OFFSET clauses based on the page number and page size. When we pass the Pageable object to the query method, Spring Data JPA handles the pagination logic behind the scenes
+
+    @Query(
+            """
+           SELECT book
+           FROM Book book
+           WHERE book.owner.id = :userId
+           """
+    )
+    Page<Book> findAllBooksByOwner(Pageable pageable, Integer userId);
+
 }
