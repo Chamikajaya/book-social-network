@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
+
 public interface BookTransactionRepository extends JpaRepository<BookTransaction, Integer> {
 
 
@@ -51,5 +53,22 @@ public interface BookTransactionRepository extends JpaRepository<BookTransaction
             """
     )
     Boolean isTheBookAlreadyBorrowedBySomeOtherAndNotReturned(Integer bookId, Integer userId);
+
+    @Query(
+            """
+            SELECT bookTransaction
+            FROM BookTransaction bookTransaction
+            WHERE bookTransaction.book.id = :bookId
+            AND bookTransaction.user.id = :userId
+            AND bookTransaction.isReturned = false
+            """
+    )
+    Optional<BookTransaction> findTheBookBorrowedByCurrUserAndNotReturned(Integer bookId, Integer userId);
+
+
+
+
+
+
 
 }

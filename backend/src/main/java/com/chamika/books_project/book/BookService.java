@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -251,4 +252,32 @@ public class BookService {
     }
 
 
+    public void returnTheBorrowedBook(Integer bookId, Authentication authentication) {
+
+        // check whether the bookId is valid
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("The book with id " + bookId + " not found"));
+
+
+        // check whether the targeted book's owner is current user
+        User user = (User) authentication.getPrincipal();
+
+        // check whether the targeted book's owner is current user
+        if (user.getId().equals(book.getOwner().getId())) {
+            throw new IllegalOperationPerformException("You can not return your own book !");
+        }
+
+        // check whether the user has borrowed the book
+        BookTransaction bookTransaction = bookTransactionRepository.findTheBookBorrowedByCurrUserAndNotReturned(
+                bookId, user.getId()
+        ).orElseThrow(
+                () -> new IllegalOperationPerformException("You can not return this book, since you have not borrowed the book in the first place."));
+
+
+
+        // set returned to true & save to db
+        bookTransaction.setIsReturned(true);
+        bookTransactionRepository.save(bookTransaction);
+
+    }
 }

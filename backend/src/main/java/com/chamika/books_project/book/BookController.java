@@ -91,6 +91,12 @@ public class BookController {
         bookService.borrowABook(bookId, authentication);
     }
 
+    @PatchMapping("/borrow/return/{bookId}")
+    public void returnTheBorrowedBook(@PathVariable("bookId") Integer bookId, Authentication authentication) {
+        bookService.returnTheBorrowedBook(bookId, authentication);
+    }
+
+
 
 
 
