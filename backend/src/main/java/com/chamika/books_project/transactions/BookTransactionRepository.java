@@ -65,8 +65,16 @@ public interface BookTransactionRepository extends JpaRepository<BookTransaction
     )
     Optional<BookTransaction> findTheBookBorrowedByCurrUserAndNotReturned(Integer bookId, Integer userId);
 
-
-    Optional<BookTransaction> findBookTransactionByBookIdAndUserId(Integer bookId, Integer userId);
+    @Query(
+            """
+            SELECT bookTransaction
+            FROM BookTransaction bookTransaction
+            WHERE bookTransaction.book.id = :bookId
+            AND bookTransaction.book.owner.id = :userId
+            AND bookTransaction.isReturnApproved = false
+            """
+    )
+    Optional<BookTransaction> findBookTransactionByBookIdAndOwnerIdAndNotIsReturnApproved(Integer bookId, Integer userId);
 
 
 

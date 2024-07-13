@@ -15,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -293,8 +292,8 @@ public class BookService {
         }
 
         // is the book returned
-        BookTransaction bookTransaction = bookTransactionRepository.findBookTransactionByBookIdAndUserId(bookId, user.getId()).orElseThrow(
-                () -> new ResourceNotFoundException("The transaction which matches given criteria does not exist.")
+        BookTransaction bookTransaction = bookTransactionRepository.findBookTransactionByBookIdAndOwnerIdAndNotIsReturnApproved(bookId, user.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("The transaction which matches given criteria does not exist. So you can not proceed with approval")
         );
 
         if (!bookTransaction.getIsReturned()) {
