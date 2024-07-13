@@ -66,6 +66,9 @@ public interface BookTransactionRepository extends JpaRepository<BookTransaction
     Optional<BookTransaction> findTheBookBorrowedByCurrUserAndNotReturned(Integer bookId, Integer userId);
 
 
+    Optional<BookTransaction> findBookTransactionByBookIdAndUserId(Integer bookId, Integer userId);
+
+
 
 
 

@@ -96,6 +96,11 @@ public class BookController {
         bookService.returnTheBorrowedBook(bookId, authentication);
     }
 
+    @PatchMapping("/borrow/return/approve/{bookId}")
+    public void approveTheReturnOfBorrowedBook(@PathVariable("bookId") Integer bookId, Authentication authentication) {
+        bookService.approveTheReturnOfBorrowedBook(bookId, authentication);
+    }
+
 
 
 

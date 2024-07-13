@@ -274,9 +274,35 @@ public class BookService {
                 () -> new IllegalOperationPerformException("You can not return this book, since you have not borrowed the book in the first place."));
 
 
-
         // set returned to true & save to db
         bookTransaction.setIsReturned(true);
+        bookTransactionRepository.save(bookTransaction);
+
+    }
+
+    public void approveTheReturnOfBorrowedBook(Integer bookId, Authentication authentication) {
+
+        // whether the bookId is valid
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("The book with id " + bookId + " not found"));
+
+        // book belongs to user
+        User user = (User) authentication.getPrincipal();
+        if (!book.getOwner().getId().equals(user.getId())) {
+            throw new IllegalOperationPerformException("You can not approve the return status for someone else's book");
+        }
+
+        // is the book returned
+        BookTransaction bookTransaction = bookTransactionRepository.findBookTransactionByBookIdAndUserId(bookId, user.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("The transaction which matches given criteria does not exist.")
+        );
+
+        if (!bookTransaction.getIsReturned()) {
+            throw new IllegalOperationPerformException("The book has not being returned yet.");
+        }
+
+        // set approved to true and save to db
+        bookTransaction.setIsReturnApproved(true);
         bookTransactionRepository.save(bookTransaction);
 
     }
