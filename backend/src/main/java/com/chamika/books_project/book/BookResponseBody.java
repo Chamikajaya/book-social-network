@@ -11,7 +11,7 @@ public record BookResponseBody(
 
         String ownerName,
 
-//        Byte[] coverImage,  TODO: Implement cover image
+        byte[] coverImage,
 
         Double averageRating
 

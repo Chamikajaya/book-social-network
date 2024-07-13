@@ -1,6 +1,7 @@
 package com.chamika.books_project.book;
 
 import com.chamika.books_project.transactions.BookTransaction;
+import com.chamika.books_project.utils.FileUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,8 +29,7 @@ public class BookMapper {
                 book.getIsShareable(),
                 book.getIsArchived(),
                 book.getOwner().getFullName(),
-// TODO: Implement cover image
-//                book.getCoverImage(),
+                FileUtils.readFileFromLocation(book.getCoverImage()),  // converting String to byte[]
                 book.getAverageRating()
         );
     }

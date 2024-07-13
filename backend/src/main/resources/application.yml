@@ -59,6 +59,10 @@ application:
     frontend:
       activation-url: http://localhost:3000/activate-account
 
+  file:
+    upload:
+      photos-directory: ./uploads
+
 
 
 springdoc:

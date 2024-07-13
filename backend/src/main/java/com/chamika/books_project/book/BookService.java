@@ -5,6 +5,7 @@ import com.chamika.books_project.exceptions.ResourceNotFoundException;
 import com.chamika.books_project.shared.PageResponse;
 import com.chamika.books_project.transactions.BookTransaction;
 import com.chamika.books_project.transactions.BookTransactionRepository;
+import com.chamika.books_project.utils.FileStorageService;
 import com.chamika.books_project.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,6 +27,7 @@ public class BookService {
     private final BookMapper bookMapper;
     private final BookRepository bookRepository;
     private final BookTransactionRepository bookTransactionRepository;
+    private final FileStorageService fileStorageService;
 
     public void addBook(BookSaveRequestBody bookSaveRequest, Authentication auth) {
 
@@ -303,6 +306,24 @@ public class BookService {
         // set approved to true and save to db
         bookTransaction.setIsReturnApproved(true);
         bookTransactionRepository.save(bookTransaction);
+
+    }
+
+    public void uploadBookCoverImg(MultipartFile file, Integer bookId, Authentication authentication) {
+
+        // whether the bookId is valid
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("The book with id " + bookId + " not found"));
+
+        // book belongs to user
+        User user = (User) authentication.getPrincipal();
+        if (!book.getOwner().getId().equals(user.getId())) {
+            throw new IllegalOperationPerformException("You can not upload a cover image for someone else's book");
+        }
+
+        String coverImageUrl = fileStorageService.saveFile(file, user.getId());
+        book.setCoverImage(coverImageUrl);
+        bookRepository.save(book);
 
     }
 }

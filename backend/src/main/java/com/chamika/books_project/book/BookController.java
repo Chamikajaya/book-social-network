@@ -4,8 +4,10 @@ import com.chamika.books_project.shared.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("books")
@@ -101,12 +103,13 @@ public class BookController {
         bookService.approveTheReturnOfBorrowedBook(bookId, authentication);
     }
 
+    @PostMapping(value = "/cover/{bookId}", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadBookCoverImg(
+            @RequestPart("file") MultipartFile file,
+            @PathVariable("bookId") Integer bookId,
+            Authentication authentication) {
 
-
-
-
-
-
-
-
+        bookService.uploadBookCoverImg(file, bookId, authentication);
+        return ResponseEntity.accepted().build();
+    }
 }

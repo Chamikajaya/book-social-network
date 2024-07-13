@@ -1,6 +1,6 @@
 ### TODOs:
 
-* Implement Image Upload
+* Implement Image Upload using AWS s3 service
 * check how to reduce code duplication for updating shareable & archived status
 * Fix duplicate books add
 * **Rethink about getAllBorrowedBooksOfUser & getAllReturnedBooksOfUser**
