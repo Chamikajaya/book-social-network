@@ -44,7 +44,7 @@ public class Feedback {
     // audit fields -->
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDate createdDate;
+    private LocalDateTime createdDateTime;
 
     @LastModifiedDate
     @Column(insertable = false)

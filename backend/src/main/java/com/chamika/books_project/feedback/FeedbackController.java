@@ -1,5 +1,6 @@
 package com.chamika.books_project.feedback;
 
+import com.chamika.books_project.shared.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,19 @@ public class FeedbackController {
 
         feedbackService.createFeedback(FeedbackRequestBody, auth);
     }
+
+    @GetMapping("/book/{bookId}")
+    @ResponseStatus(HttpStatus.OK)
+    public PageResponse<FeedbackResponseBody> getAllFeedbacksByBook(
+            @PathVariable("bookId") Integer bookId,
+            @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(name = "size", defaultValue = "8", required = false) int size,
+            Authentication auth
+    ) {
+
+        return feedbackService.getAllFeedbacksByBook(bookId, page, size, auth);
+    }
+
 
 
 }

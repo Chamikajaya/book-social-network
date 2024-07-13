@@ -15,4 +15,14 @@ public class FeedbackMapper {
 
 
     }
+
+    public FeedbackResponseBody toFeedbackResponseBody(Feedback feedback, Integer currUserId) {
+        return new FeedbackResponseBody(
+                feedback.getRating(),
+                feedback.getComment(),
+                feedback.getCreatedBy().equals(currUserId)
+        );
+    }
+
+
 }
