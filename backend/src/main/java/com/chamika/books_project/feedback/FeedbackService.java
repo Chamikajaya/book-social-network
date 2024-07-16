@@ -33,7 +33,7 @@ public class FeedbackService {
 
         // check whether the user is the owner of the book
         User user = (User) auth.getPrincipal();
-        if (!book.getOwner().getId().equals(user.getId())) {
+        if (book.getOwner().getId().equals(user.getId())) {
             throw new IllegalOperationPerformException("You can not give a feedback to your own book. ");
         }
 
@@ -46,12 +46,9 @@ public class FeedbackService {
         Feedback feedback = feedbackMapper.toFeedback(feedbackRequestBody);
         feedbackRepository.save(feedback);
 
-
     }
 
 
-
-    // TODO: test the full API - especially the below one
     public PageResponse<FeedbackResponseBody> getAllFeedbacksByBook(Integer bookId, int page, int size, Authentication auth) {
 
         // check whether the book exists
