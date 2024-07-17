@@ -28,7 +28,7 @@ public class SecurityConfig {
     // Defines a bean for the security filter chain
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors(Customizer.withDefaults())
+                .cors(Customizer.withDefaults())  // spring will search for CorsFilter Bean defined in BeansConfig.java and apply it
                 .csrf(AbstractHttpConfigurer::disable)  // disable CSRF since we are using JWT (Cross-Site Request Forgery)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(
