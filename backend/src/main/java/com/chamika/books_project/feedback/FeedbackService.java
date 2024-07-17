@@ -52,7 +52,7 @@ public class FeedbackService {
     public PageResponse<FeedbackResponseBody> getAllFeedbacksByBook(Integer bookId, int page, int size, Authentication auth) {
 
         // check whether the book exists
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException("Book not found with id " + bookId));
+        bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException("Book not found with id " + bookId));
 
         User user = (User) auth.getPrincipal();
 
@@ -61,7 +61,9 @@ public class FeedbackService {
 
         Page<Feedback> feedbacksForThisBook = feedbackRepository.findAllFeedbacksRelatedToABook(bookId, pageable);
 
-        List<FeedbackResponseBody> feedbackResponseBodies = feedbacksForThisBook.stream().map((Feedback feedback) -> feedbackMapper.toFeedbackResponseBody(feedback, user.getId())).toList();
+        List<FeedbackResponseBody> feedbackResponseBodies = feedbacksForThisBook.stream().map(
+                (Feedback feedback) -> feedbackMapper.toFeedbackResponseBody(feedback, user.getId())
+        ).toList();
 
         return new PageResponse<>(
                 feedbackResponseBodies,

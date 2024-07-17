@@ -1,5 +1,5 @@
 ### TODOs:
-
+* Remove tailwind
 **Refactor the functions to smaller chunks**
 
 * Integrate flyway for database migration 😊
