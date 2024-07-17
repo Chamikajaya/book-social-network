@@ -8,7 +8,6 @@ export type BookType = {
     isArchived: boolean,
     ownerName: string,
     averageRating: number,
-    coverImage: string[],
-
+    coverImage: string,  // base 64 encoded image
 
 }

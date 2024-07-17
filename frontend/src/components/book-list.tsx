@@ -5,16 +5,20 @@ import { BookType } from "@/types/book-type";
 import toast from "react-hot-toast";
 import axios from "axios";
 import MyLoader from "@/components/loader";
-import {useAuth} from "../../context/auth-context";
+import { useAuth } from "../../context/auth-context";
+import PaginationForSearch from "@/components/pagination-for-search";
+import BookCard from "@/components/BookCard";
 
+interface PageResponse {
+    content: BookType[];
+    totalPages: number;
+    number: number;
+}
 
 export default function BookList() {
-
-    const { token } = useAuth(); // grabbing the token from the context
-
-    const [books, setBooks] = useState<BookType[]>([]);
+    const { token } = useAuth();
+    const [result, setResults] = useState<PageResponse | null>(null);
     const [page, setPage] = useState<number>(0);
-
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +30,6 @@ export default function BookList() {
 
                 const response = await axios.get(
                     `${process.env.NEXT_PUBLIC_API_BASE_URL}/books?page=${page}`,
-                    // send the token in the request headers
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
@@ -35,7 +38,7 @@ export default function BookList() {
                 );
 
                 if (response.status === 200) {
-                    setBooks(response.data.content);
+                    setResults(response.data);
                 }
             } catch (e) {
                 setError("Error fetching books. Try again later.");
@@ -54,19 +57,26 @@ export default function BookList() {
     }, [page, token]);
 
     const handlePageChange = (newPage: number) => {
-        setPage(newPage);
+        setPage(newPage - 1); // Convert one-based to zero-based
     };
 
     if (loading) return <MyLoader />;
-
     if (error) return <div className="container mx-auto text-center py-10">{error}</div>;
 
     return (
-        <div>
-            {/* TODO: implement the jsx later, make sure the api hits :) */}
-            {books.map((book) => (
-                <div key={book.id}>{book.title}</div> // Adjust according to your BookType
-            ))}
+        <div className="container mx-auto py-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-6">
+                {result && result.content.map((book) => (
+                    <BookCard key={book.id} book={book} />
+                ))}
+            </div>
+            {result && (
+                <PaginationForSearch
+                    totalPages={result.totalPages}
+                    currentPage={result.number + 1} // Convert zero-based to one-based
+                    onPageChange={handlePageChange}
+                />
+            )}
         </div>
     );
 }
