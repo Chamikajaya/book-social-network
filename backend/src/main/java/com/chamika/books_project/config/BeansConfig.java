@@ -59,7 +59,7 @@ public class BeansConfig {
         // allows cookies to be sent cross-origin
         corsConfiguration.setAllowCredentials(true);
 
-        corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+        corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
 
         corsConfiguration.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.ORIGIN,
