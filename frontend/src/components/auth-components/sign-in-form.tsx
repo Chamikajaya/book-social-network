@@ -66,7 +66,6 @@ export default function SignInForm() {
                 onSuccessfulSubmit();
 
             }
-            console.log(response.data);
         } catch (error) {
             console.error(error);
             // @ts-ignore
