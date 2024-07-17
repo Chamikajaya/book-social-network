@@ -1,16 +1,23 @@
-import React, { useState } from "react";
-import { BookType } from "@/types/book-type";
+"use client";
+
+import React, {useState} from "react";
+import {BookType} from "@/types/book-type";
 import Image from "next/image";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useAuth } from "../../context/auth-context";
-import { Button } from "@/components/ui/button";
-import { AlertModal } from "@/components/ui/alert-modal";
+import {useAuth} from "../../context/auth-context";
+import {Button} from "@/components/ui/button";
+import {AlertModal} from "@/components/ui/alert-modal";
+import {usePathname, useRouter} from 'next/navigation';
+import {Plus} from "lucide-react";
 
-export default function BookCard({ book }: { book: BookType }) {
-    const { token } = useAuth();
+
+export default function BookCard({book}: { book: BookType }) {
+    const {token} = useAuth();
+    const router = useRouter();
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const pathname = usePathname();
 
     const borrowBook = async () => {
         try {
@@ -45,44 +52,70 @@ export default function BookCard({ book }: { book: BookType }) {
         }
     };
 
-    return (
-        <>
-            <AlertModal
-                title="Confirm Borrowing"
-                description={`Are you sure you want to borrow "${book.title}"?`}
-                isOpen={open}
-                onClose={() => setOpen(false)}
-                onConfirm={borrowBook}
-                loading={loading}
-            />
+    const modifyArchivedStatus = async () => {
+        // Implement archive functionality
+    };
 
-            <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-                <Image
-                    src={`data:image/jpg;base64,${book.coverImage}`}
-                    alt={`Cover of ${book.title}`}
-                    width={300}
-                    height={300}
+    const modifyShareableStatus = async () => {
+        // Implement share functionality
+    };
+
+    const editBook = async () => {
+        // Implement edit functionality
+    };
+
+    const createBook = () => {
+        router.push('/add-book');
+
+    }
+
+    return (
+        <div className={"flex flex-col"}>
+            <Button
+                onClick={createBook}
+            >
+                <Plus size={24} className={"mr-4"}/>
+                Add Book
+            </Button>
+            {pathname === '/books' && (
+                <AlertModal
+                    isOpen={open}
+                    onClose={() => setOpen(false)}
+                    onConfirm={borrowBook}
+                    loading={loading}
+                    title={`Borrow ${book.title}`}
                 />
-                <div className="p-4">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-semibold">{book.title}</h2>
-                        <span className="text-gray-500">{book.authorName}</span>
-                    </div>
-                    <div className="mt-2 text-gray-700">{book.synopsis}</div>
-                    <div className="mt-4 text-sm text-gray-500">ISBN: {book.isbn}</div>
-                    <div className="mt-2 flex justify-between items-center">
-                        <span className="text-sm text-gray-500">Rating: {book.averageRating}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <Button
-                            onClick={() => setOpen(true)}
-                            disabled={loading}
-                        >
-                            Borrow
-                        </Button>
-                    </div>
-                </div>
+            )}
+
+            <div className="book-card">
+
+                {/* TODO: Render book cover once create book is handled  */}
+
+                {/*<Image src={book.coverImage} alt={book.title} width={200} height={300} />*/}
+
+                <h2>{book.title}</h2>
+                <p>{book.authorName}</p>
+                <p>{book.synopsis}</p>
+                <p>ISBN: {book.isbn}</p>
+                <p>Rating: {book.averageRating}</p>
+
+                {pathname === '/books' && (
+                    <Button
+                        onClick={() => setOpen(true)}
+                        disabled={loading}
+                    >
+                        Borrow
+                    </Button>
+                )}
+
+                {pathname === '/my-books' && (
+                    <>
+                        <Button onClick={editBook} disabled={loading}>Update</Button>
+                        <Button onClick={modifyArchivedStatus} disabled={loading}>Delete</Button>
+                        <Button onClick={modifyShareableStatus} disabled={loading}>Share</Button>
+                    </>
+                )}
             </div>
-        </>
+        </div>
     );
 }
