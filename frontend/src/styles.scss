@@ -1,6 +1,12 @@
+//@tailwind base;
+//@tailwind components;
+//@tailwind utilities;
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+@import "bootstrap/dist/css/bootstrap.min.css";
 @import "@fortawesome/fontawesome-free/css/all.css";
+
+
+.login-container {
+  width: 800px !important;
+  margin-top: 15%;
+}
