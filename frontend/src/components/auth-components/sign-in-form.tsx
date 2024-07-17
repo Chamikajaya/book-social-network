@@ -86,7 +86,7 @@ export default function SignInForm() {
         <CardWrapper
             title="Welcome Back 😊"
             backBtnLabel="Don't have an account ? "
-            backBtnLink="/register"
+            backBtnLink="/sign-up"
             formTopic={"Login 🔒"}
         >
             <Form {...form}>
