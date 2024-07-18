@@ -83,7 +83,7 @@ public class JwtUtil {
     public <T> T extractAllClaims(String token, Function<Claims, T> claimsResolver) {
         return claimsResolver.apply(
                 Jwts.parser()
-                        .verifyWith(getSigningKey())  // ? TOTO: check
+                        .verifyWith(getSigningKey())
                         .build()
                         .parseSignedClaims(token)
                         .getPayload()

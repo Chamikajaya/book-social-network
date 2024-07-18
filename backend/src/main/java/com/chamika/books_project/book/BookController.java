@@ -18,11 +18,11 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBook(
+    public ResponseEntity<Integer> addBook(
             @Valid @RequestBody BookSaveRequestBody bookSaveRequest,
             Authentication auth
     ) {
-        bookService.addBook(bookSaveRequest, auth);
+        return ResponseEntity.ok(bookService.addBook(bookSaveRequest, auth));
     }
 
     @GetMapping("/{id}")
@@ -35,7 +35,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<BookResponseBody> getBooks(
             @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "8", required = false) Integer size,
+            @RequestParam(name = "size", defaultValue = "6", required = false) Integer size,
             Authentication auth
     ) {
         return bookService.getAllBooksPaginated(page, size, auth);
@@ -45,7 +45,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<BookResponseBody> getAllBooksOfAOwner(
             @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "8", required = false) Integer size,
+            @RequestParam(name = "size", defaultValue = "6", required = false) Integer size,
             Authentication auth
 
     ) {
@@ -56,10 +56,11 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<BorrowedBookResponseBody> getAllBorrowedBooksOfUser(
             @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "8", required = false) Integer size,
+            @RequestParam(name = "size", defaultValue = "6", required = false) Integer size,
             Authentication auth
 
     ) {
+        System.out.println("Hit the borrowed endpoint");
         return bookService.getAllBorrowedBooksOfUser(page, size, auth);
     }
 
@@ -69,7 +70,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public PageResponse<BorrowedBookResponseBody> getAllReturnedBooksOfUser(
             @RequestParam(name = "page", defaultValue = "0", required = false) Integer page,
-            @RequestParam(name = "size", defaultValue = "8", required = false) Integer size,
+            @RequestParam(name = "size", defaultValue = "6", required = false) Integer size,
             Authentication auth
 
     ) {

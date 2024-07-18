@@ -14,6 +14,5 @@
 
 ### Deployment:
 
-* Change OpenAPIConfig class specs
 * MailDev docker compose change local-host
 * build the image + CI/CD pipeline

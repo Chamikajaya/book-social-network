@@ -21,7 +21,6 @@ public class AuthController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequestBody registerRequestBody) throws MessagingException {
 
-        // ! TODO: set the auth token header here or in verifyEmail method ???
         authService.registerUser(registerRequestBody);
         return ResponseEntity.accepted().build();
     }
@@ -35,9 +34,10 @@ public class AuthController {
                 .body(authResponseBody);
     }
 
-    @GetMapping("/verify-email")
-    public void verifyEmail(@RequestParam String token) throws MessagingException {
-        authService.verifyEmail(token);
+    @PostMapping("/verify-email")
+    public void verifyEmail(@RequestBody AccountActivateReqBody accountActivateReqBody) throws MessagingException {
+        System.out.println(accountActivateReqBody.token());
+        authService.verifyEmail(accountActivateReqBody.token());
     }
 
 

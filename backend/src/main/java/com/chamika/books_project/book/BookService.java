@@ -29,13 +29,13 @@ public class BookService {
     private final BookTransactionRepository bookTransactionRepository;
     private final FileStorageService fileStorageService;
 
-    public void addBook(BookSaveRequestBody bookSaveRequest, Authentication auth) {
+    public Integer addBook(BookSaveRequestBody bookSaveRequest, Authentication auth) {
 
         User user = (User) auth.getPrincipal();
         Book book = bookMapper.toBook(bookSaveRequest);  // map the request to a book entity
         book.setOwner(user);
 
-        bookRepository.save(book);
+        return bookRepository.save(book).getId();
     }
 
     public BookResponseBody getBookById(Integer id) {

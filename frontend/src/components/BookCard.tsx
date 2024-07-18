@@ -11,6 +11,9 @@ import {AlertModal} from "@/components/ui/alert-modal";
 import {usePathname, useRouter} from 'next/navigation';
 import {Plus} from "lucide-react";
 
+//  TODO: - save the book first and then the cover image call /upload endpoint - use Claude's help 😊
+// after successful - navigate to /my-books page
+// if sucessful should be able to see that image in server /uploads folder
 
 export default function BookCard({book}: { book: BookType }) {
     const {token} = useAuth();
@@ -65,8 +68,8 @@ export default function BookCard({book}: { book: BookType }) {
     };
 
     const createBook = () => {
+        // TODO: create schema and form validation separate component
         router.push('/add-book');
-
     }
 
     return (
