@@ -11,11 +11,10 @@ import {AlertModal} from "@/components/ui/alert-modal";
 import {usePathname, useRouter} from 'next/navigation';
 import {Plus} from "lucide-react";
 
-//  TODO: - save the book first and then the cover image call /upload endpoint - use Claude's help 😊
-// after successful - navigate to /my-books page
-// if sucessful should be able to see that image in server /uploads folder
 
 export default function BookCard({book}: { book: BookType }) {
+
+    console.log(book);
     const {token} = useAuth();
     const router = useRouter();
     const [open, setOpen] = useState(false);
@@ -56,7 +55,7 @@ export default function BookCard({book}: { book: BookType }) {
     };
 
     const modifyArchivedStatus = async () => {
-        // Implement archive functionality
+        //TODO:  Implement archive functionality
     };
 
     const modifyShareableStatus = async () => {
@@ -92,9 +91,11 @@ export default function BookCard({book}: { book: BookType }) {
 
             <div className="book-card">
 
-                {/* TODO: Render book cover once create book is handled  */}
 
-                {/*<Image src={book.coverImage} alt={book.title} width={200} height={300} />*/}
+                {book.coverImage && (
+                    <Image src={"data:image/jpg;base64," + book.coverImage} alt={book.title + " cover image"} width={300} height={300}/>
+                )}
+
 
                 <h2>{book.title}</h2>
                 <p>{book.authorName}</p>

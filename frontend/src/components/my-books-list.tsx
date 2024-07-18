@@ -58,7 +58,7 @@ export default function MyBooksList() {
     }, [page, token]);
 
     const handlePageChange = (newPage: number) => {
-        setPage(newPage - 1); // Convert one-based to zero-based
+        setPage(newPage - 1);
     };
 
     if (loading) return <MyLoader />;
@@ -74,7 +74,7 @@ export default function MyBooksList() {
             {result && (
                 <PaginationForSearch
                     totalPages={result.totalPages}
-                    currentPage={result.number + 1} // Convert zero-based to one-based
+                    currentPage={result.number + 1}
                     onPageChange={handlePageChange}
                 />
             )}
