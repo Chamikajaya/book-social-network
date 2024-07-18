@@ -12,14 +12,16 @@ import {usePathname, useRouter} from 'next/navigation';
 import {Plus} from "lucide-react";
 
 
+
 export default function BookCard({book}: { book: BookType }) {
 
-    console.log(book);
     const {token} = useAuth();
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const pathname = usePathname();
+
+    // TODO: add a banner to the card indicating shareable status & archived status
 
     const borrowBook = async () => {
         try {
@@ -55,15 +57,15 @@ export default function BookCard({book}: { book: BookType }) {
     };
 
     const modifyArchivedStatus = async () => {
-        //TODO:  Implement archive functionality
+        //TODO:  Implement archive functionality -> call the endpoint to archive the book - toggle archived status - add the banner
     };
 
     const modifyShareableStatus = async () => {
-        // Implement share functionality
+        // Implement share functionality  --> call the endpoint to share the book -toggle shareable status - add the banner
     };
 
     const editBook = async () => {
-        // Implement edit functionality
+        // Implement edit functionality -> take the user to my-books/edit/:bookId + prefill the form with the book details + image etc
     };
 
     const createBook = () => {
@@ -102,6 +104,7 @@ export default function BookCard({book}: { book: BookType }) {
                 <p>{book.synopsis}</p>
                 <p>ISBN: {book.isbn}</p>
                 <p>Rating: {book.averageRating}</p>
+                <p>Added by : {book.ownerName}</p>
 
                 {pathname === '/books' && (
                     <Button
