@@ -8,6 +8,7 @@ import com.chamika.books_project.transactions.BookTransactionRepository;
 import com.chamika.books_project.utils.FileStorageService;
 import com.chamika.books_project.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +17,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookService {
 
     // TODO: check whether code redundancy can be minimized regarding pagination
@@ -36,6 +39,29 @@ public class BookService {
         book.setOwner(user);
 
         return bookRepository.save(book).getId();
+    }
+
+    public BookResponseBody updateBook(Integer bookId, BookSaveRequestBody bookUpdateRequest, User user) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + bookId + " not found."));
+
+        // Check if the user is the owner of the book
+        if (!book.getOwner().getId().equals(user.getId())) {
+            throw new IllegalOperationPerformException("You are not allowed to update someone else's book");
+        }
+
+        // Update the book fields
+        book.setTitle(bookUpdateRequest.title());
+        book.setAuthorName(bookUpdateRequest.authorName());
+        book.setIsbn(bookUpdateRequest.isbn());
+        book.setSynopsis(bookUpdateRequest.synopsis());
+        book.setIsShareable(bookUpdateRequest.isShareable());
+
+        // Save the updated book
+        Book updatedBook = bookRepository.save(book);
+
+        // Return the updated book as a response body
+        return bookMapper.toBookResponseBody(updatedBook);
     }
 
     public BookResponseBody getBookById(Integer id) {
@@ -310,7 +336,6 @@ public class BookService {
     }
 
     public void uploadBookCoverImg(MultipartFile file, Integer bookId, Authentication authentication) {
-
         // whether the bookId is valid
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new ResourceNotFoundException("The book with id " + bookId + " not found"));
@@ -321,9 +346,16 @@ public class BookService {
             throw new IllegalOperationPerformException("You can not upload a cover image for someone else's book");
         }
 
+        // Delete the previous cover image if it exists
+        if (book.getCoverImage() != null && !book.getCoverImage().isEmpty()) {
+            fileStorageService.deletePreviousCoverImage(book.getCoverImage());
+        }
+
+        // Save the new cover image
         String coverImageUrl = fileStorageService.saveFile(file, user.getId());
         book.setCoverImage(coverImageUrl);
         bookRepository.save(book);
-
     }
+
+
 }

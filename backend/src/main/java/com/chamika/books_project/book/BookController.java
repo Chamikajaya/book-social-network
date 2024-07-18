@@ -1,6 +1,7 @@
 package com.chamika.books_project.book;
 
 import com.chamika.books_project.shared.PageResponse;
+import com.chamika.books_project.user.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,9 +26,10 @@ public class BookController {
         return ResponseEntity.ok(bookService.addBook(bookSaveRequest, auth));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{bookId}")
     @ResponseStatus(HttpStatus.OK)
-    public BookResponseBody getBook(@PathVariable("id") Integer id) {
+    public BookResponseBody getBook(@PathVariable("bookId") Integer id) {
+        System.out.println("Hit the get book endpoint");
         return bookService.getBookById(id);
     }
 
@@ -39,6 +41,18 @@ public class BookController {
             Authentication auth
     ) {
         return bookService.getAllBooksPaginated(page, size, auth);
+    }
+
+    @PutMapping("/{bookId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<BookResponseBody> updateBook(
+            @PathVariable("bookId") Integer bookId,
+            @Valid @RequestBody BookSaveRequestBody bookUpdateRequest,
+            Authentication auth
+    ) {
+        User user = (User) auth.getPrincipal();
+        BookResponseBody updatedBook = bookService.updateBook(bookId, bookUpdateRequest, user);
+        return ResponseEntity.ok(updatedBook);
     }
 
     @GetMapping("/owner")

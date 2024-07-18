@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.chamika</groupId>
     <artifactId>books-project</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>books-project</name>
     <description>Demo project for Spring Boot</description>
     <url/>
@@ -99,13 +99,12 @@
             <scope>runtime</scope>
         </dependency>
 
-<!--      for generating api documentation -->
+        <!--      for generating api documentation -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.6.0</version>
         </dependency>
-
 
 
     </dependencies>
