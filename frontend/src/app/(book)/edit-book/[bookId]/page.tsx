@@ -1,13 +1,15 @@
 "use client";
 
-import React, {useState} from 'react';
-import {useForm} from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import {useAuth} from "../../context/auth-context";
-import {Button} from "@/components/ui/button";
-import {useRouter} from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {useRouter, useParams } from 'next/navigation';
+import {useAuth} from "../../../../../context/auth-context";
+import toast from "react-hot-toast";
 
 interface BookFormData {
+    id?: number;
     title: string;
     authorName: string;
     isbn: string;
@@ -15,42 +17,60 @@ interface BookFormData {
     isShareable: boolean;
 }
 
-const AddBook: React.FC = () => {
-
-    const {token} = useAuth();
+const EditBook: React.FC = () => {
     const router = useRouter();
-
-    const {register, handleSubmit, formState: {errors}} = useForm<BookFormData>();
-    const [bookId, setBookId] = useState<number | null>(null);
+    const { bookId } = useParams();
+    console.log(useParams());
+    const { token } = useAuth();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<BookFormData>();
     const [coverImage, setCoverImage] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    useEffect(() => {
+        const fetchBookDetails = async () => {
+            if (!bookId) return;
+
+            try {
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/books/${bookId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                reset(response.data);
+            } catch (error) {
+                console.error('Error fetching book details:', error);
+                setError('Failed to fetch book details. Please try again.');
+            }
+        };
+
+        fetchBookDetails();
+    }, [bookId, token, reset]);
+
     const onSubmit = async (data: BookFormData) => {
+        if (!bookId) return;
+
         setIsLoading(true);
         setError(null);
 
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/books`,
+            await axios.put(`${process.env.NEXT_PUBLIC_API_BASE_URL}/books/${bookId}`,
                 data, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
                 });
 
-            console.log(response)
-
-            setBookId(response.data);
-
             if (coverImage) {
-                await uploadCoverImage(response.data);
+                await uploadCoverImage(Number(bookId));
             }
 
-            // Reset form or show success message
-            alert('Book added successfully!');
+           toast.success('Book updated successfully');
+            router.push('/my-books'); // Redirect to books list page
         } catch (error) {
-            setError('Failed to add book. Please try again.');
-            console.error('Error adding book:', error);
+            setError('Failed to update book. Please try again.');
+            toast.error('Failed to update book. Please try again.');
+            console.error('Error updating book:', error);
         } finally {
             setIsLoading(false);
         }
@@ -63,8 +83,8 @@ const AddBook: React.FC = () => {
         formData.append('file', coverImage);
 
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/books/cover/${bookId}`
-                , formData, {
+            await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/books/cover/${bookId}`,
+                formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`,
@@ -82,10 +102,15 @@ const AddBook: React.FC = () => {
         }
     };
 
+    if (!bookId) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className="max-w-md mx-auto mt-10">
-            <h1 className="text-2xl font-bold mb-5">Add New Book</h1>
+            <h1 className="text-2xl font-bold mb-5">Edit Book</h1>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                {/* Form fields remain the same as in the previous version */}
                 <div>
                     <label htmlFor="title" className="block mb-1">Title</label>
                     <input
@@ -159,11 +184,11 @@ const AddBook: React.FC = () => {
                     disabled={isLoading}
                     className="w-full mt-4"
                 >
-                    {isLoading ? 'Adding Book...' : 'Add Book'}
+                    {isLoading ? 'Updating Book...' : 'Update Book'}
                 </Button>
             </form>
         </div>
     );
 };
 
-export default AddBook;
+export default EditBook;

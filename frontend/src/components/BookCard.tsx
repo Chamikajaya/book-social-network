@@ -10,7 +10,7 @@ import {Button} from "@/components/ui/button";
 import {AlertModal} from "@/components/ui/alert-modal";
 import {usePathname, useRouter} from 'next/navigation';
 import {Plus} from "lucide-react";
-
+;
 
 
 export default function BookCard({book}: { book: BookType }) {
@@ -64,8 +64,8 @@ export default function BookCard({book}: { book: BookType }) {
         // Implement share functionality  --> call the endpoint to share the book -toggle shareable status - add the banner
     };
 
-    const editBook = async () => {
-        // Implement edit functionality -> take the user to my-books/edit/:bookId + prefill the form with the book details + image etc
+    const editBook =  (bookId) => {
+        router.push(`/edit-book/${bookId}`);
     };
 
     const createBook = () => {
@@ -117,7 +117,7 @@ export default function BookCard({book}: { book: BookType }) {
 
                 {pathname === '/my-books' && (
                     <>
-                        <Button onClick={editBook} disabled={loading}>Update</Button>
+                        <Button onClick={() => editBook(book.id)} disabled={loading}>Update</Button>
                         <Button onClick={modifyArchivedStatus} disabled={loading}>Delete</Button>
                         <Button onClick={modifyShareableStatus} disabled={loading}>Share</Button>
                     </>
