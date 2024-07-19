@@ -1,0 +1,135 @@
+# Name of the workflow
+name: CD - Deploy Backend
+
+# Define when this workflow will run
+on:
+  workflow_dispatch:  # Allows manual triggering from the GitHub Actions tab
+  push:
+    branches: [ main ]  # Triggers on pushes to the main branch
+    paths: [ 'backend/**' ]  # Only runs if changes are in this directory
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+
+    # Set the working directory for all run steps
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      #       Step 2: Send Slack notification about deployment start
+      - name: Send Slack message - Deployment Start
+        run: >
+          curl -X POST -H 'Content-type: application/json'
+          --data '{"text":"Deployment has started for the backend  :spring-boot: "}'
+          ${{ secrets.SLACK_WEBHOOK_URL}}
+
+      # Step 3: Set up Java environment
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'  # Cache Maven packages for faster builds
+
+      # Step 4: Log in to Docker Hub
+      # Taken from -> https://github.com/marketplace/actions/docker-login
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          # Make sure to add these secrets to the repository
+          username: ${{ secrets.DOCKERHUB_USERNAME}}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
+
+      # Step 5: Generate a unique build number based on the current date and time
+      # Creating a unique identifier for each build (based on the exact date and time the build is run) and making it available for use in later steps of the workflow.
+      - name: Set build number
+        id: build_number # ID for referencing this step's output
+        run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT  #  GITHUB_OUTPUT is a special environment variable that points to a file. Anything written to this file becomes an output of the current step, which can be used in subsequent steps
+
+      #       Step 6: Notify Slack that build is starting
+      - name: Send Slack message - Build Start
+        run: >
+          curl -X POST -H 'Content-type: application/json'
+          --data '{"text":"Building with maven  :maven: "}'
+          ${{ secrets.SLACK_WEBHOOK_URL}}
+
+      # Step 7: Build and push Docker image
+      - name: Build and push Docker image
+        run: >
+          mvn -ntp -B verify 
+          -Ddocker.image.tag=${{steps.build_number.outputs.BUILD_NUMBER}} 
+          jib:build
+
+      # Step 8: Notify Slack that image has been pushed
+      - name: Send Slack message - Image Pushed
+        run: >
+          curl -X POST -H 'Content-type: application/json'
+          --data '{"text":"docker: Image tag:${{steps.build_number.outputs.BUILD_NUMBER}} pushed to https://hub.docker.com/repository/docker/chamikajay/spring-api/general :shydocker: "}'
+          ${{ secrets.SLACK_WEBHOOK_URL}}
+
+      # Step 9: Update AWS configuration file with new image tag using sed command (a stream editor for filtering and transforming text) to replace the Docker image tag in the file with the build number generated in a previous step.
+
+      # This ensures that when the application is deployed to AWS Elastic Beanstalk, it uses the Docker image that was built in this workflow run.
+      - name: Update Dockerrun.aws.json
+        run: |
+          echo "Before updating Dockerrun.aws.json"
+          cat Dockerrun.aws.json
+          
+          sed -i -E 's_(chamikajay/spring-book-api:)([^"]*)_\1'${{steps.build_number.outputs.BUILD_NUMBER}}'_' Dockerrun.aws.json 
+          
+          echo "After updating Dockerrun.aws.json"
+          cat Dockerrun.aws.json
+
+      # Step 10: Notify Slack that deployment to AWS is about to start
+      - name: Send Slack message - Deployment Preparation
+        run: >
+          curl -X POST -H 'Content-type: application/json'
+          --data '{"text":" AWS Beanstalk deployment is about to start :bowtie:"}'
+          ${{ secrets.SLACK_WEBHOOK_URL}}
+
+      # Step 11: Deploy to AWS Elastic Beanstalk
+      # taken from -> https://github.com/marketplace/actions/beanstalk-deploy
+      - name: Deploy to AWS Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID  }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY  }}
+          application_name: books-project-spring
+          environment_name: Books-project-spring-env
+          version_label: ${{  steps.build_number.outputs.BUILD_NUMBER  }}
+          region: ap-south-1
+          version_description: ${{github.SHA}}  # sets the version description to the commit SHA of the current GitHub Actions run. This provides a way to trace the deployed code back to a specific commit.
+          deployment_package: backend/Dockerrun.aws.json
+
+      # Step 12: Notify Slack of successful deployment
+      - name: Send Slack message - Deployment Success
+        run: >
+          curl -X POST -H 'Content-type: application/json'
+          --data '{"text":" AWS Beanstalk deployment is successful :aws: "}'
+          ${{ secrets.SLACK_WEBHOOK_URL}}
+
+      # Step 13: Commit and push the updated Dockerrun.aws.json
+      - name: Commit and push the updated Dockerrun.aws.json
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Updated Dockerrun.aws.json with the new image tag -->  ${{  steps.build_number.outputs.BUILD_NUMBER  }}"
+          git push "https://${{ secrets.MY_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:main
+
+      # Step 14: Send final Slack notification
+      - name: Send Slack message - Workflow Complete
+        run: >
+          curl -X POST -H 'Content-type: application/json'
+          --data '{"text":" CD workflow is successful - http://spring-api-env.eba-umgpxpfa.ap-south-1.elasticbeanstalk.com/ :success-arms: "}'
+          ${{ secrets.SLACK_WEBHOOK_URL}}

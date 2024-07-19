@@ -11,21 +11,9 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - book-project-network
     restart: unless-stopped
 
-  pgadmin:
-    container_name: pgadmin_books_project
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    ports:
-      - "5050:80"
-    networks:
-      - postgres
-    restart: unless-stopped
 
   mail-dev:
     container_name: maildev_books_project
@@ -34,12 +22,29 @@ services:
       - "1080:1080"  # HTTP Web UI
       - "1025:1025"  # SMTP Server
 
+  project-api:
+    container_name: project_api_books_project
+    image: chamikajay/spring-book-api
+    ports:
+      - "8080:8080"
+    networks:
+      - book-project-network
+    depends_on:
+      - postgres
+      - mail-dev
+    volumes:
+        - api-storage:/app/storage
+    environment:
+        SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/books-network
 
-# TODO: Later add api container once it is built
+
+
 
 networks:
-  postgres:
+  book-project-network:
     driver: bridge
 
 volumes:
   postgres_books_project:
+  api-storage:
+    driver: local
