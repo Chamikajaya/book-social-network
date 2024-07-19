@@ -59,7 +59,10 @@ public class BeansConfig {
         // allows cookies to be sent cross-origin
         corsConfiguration.setAllowCredentials(true);
 
-        corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList(
+                "http://localhost:3000",     // For local development outside Docker
+                "http://project-ui:3000"     // For requests within Docker network
+        ));
 
         corsConfiguration.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.ORIGIN,

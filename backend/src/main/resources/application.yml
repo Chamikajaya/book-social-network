@@ -1,6 +1,5 @@
-# TODO:-> Setup spring profiles & mail server before AWS deployment / CI-CD
-
 server:
+
   servlet:
     context-path: /api/v1/
   port: 8080
@@ -10,6 +9,8 @@ server:
 
 spring:
 
+  profiles:
+    active: dev
 
   servlet:
     multipart:
@@ -34,20 +35,21 @@ spring:
     show-sql: false
 
   mail:
-    host: localhost  # TODO: Change during production
-    port: 1025
-    username: realcj
-    password: password
+    host: smtp.gmail.com
+    port: 465
+    username: chamika.21@cse.mrt.ac.lk
+    password: toqquqzbnvbmafdm
+
     properties:
       mail:
         smtp:
-          trust: "*"
-        auth: true
+          auth: true
+          ssl:
+            enable: true
+            trust: "*"
         starttls:
           enable: true
-        connectiontimeout: 5000
-        timeout: 3000
-        writetimeout: 5000
+    protocol: smtp
 
 application:
   security:

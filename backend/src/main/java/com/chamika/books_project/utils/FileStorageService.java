@@ -91,4 +91,20 @@ public class FileStorageService {
         }
         return originalFilename.substring(dotIndex + 1).toLowerCase();
     }
+
+    public void deletePreviousCoverImage(String coverImagePath) {
+        if (coverImagePath != null && !coverImagePath.isEmpty()) {
+            File fileToDelete = new File(coverImagePath);
+            if (fileToDelete.exists()) {
+                boolean deleted = fileToDelete.delete();
+                if (deleted) {
+                    log.info("Previous cover image deleted successfully: " + coverImagePath);
+                } else {
+                    log.warn("Failed to delete previous cover image: " + coverImagePath);
+                }
+            } else {
+                log.warn("Previous cover image file not found: " + coverImagePath);
+            }
+        }
+    }
 }
