@@ -30,6 +30,8 @@
         <java.version>17</java.version>
         <docker.username>chamikajay</docker.username>
         <docker.image.name>spring-book-api</docker.image.name>
+        <docker.image.tag/>  <!-- This will be set by the CD pipeline (based on current date and time 😊)-->
+
     </properties>
     <dependencies>
         <dependency>

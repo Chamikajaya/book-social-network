@@ -1,0 +1,23 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "spring-api",
+      "image": "chamikajay/spring-book-api",
+      "essential": true,
+      "memory": 512,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 8080
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPRING_DATASOURCE_URL",
+          "value": "jdbc:postgresql://awseb-e-bvkbrqeszt-stack-awsebrdsdatabase-u8543luv042y.cpu2cw2e8e78.ap-south-1.rds.amazonaws.com:5432/books-network"
+        }
+      ]
+    }
+  ]
+}
