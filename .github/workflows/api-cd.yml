@@ -74,7 +74,7 @@ jobs:
       - name: Send Slack message - Image Pushed
         run: >
           curl -X POST -H 'Content-type: application/json'
-          --data '{"text":"docker: Image tag:${{steps.build_number.outputs.BUILD_NUMBER}} pushed to https://hub.docker.com/repository/docker/chamikajay/spring-api/general :shydocker: "}'
+          --data '{"text":"docker: Image tag:${{steps.build_number.outputs.BUILD_NUMBER}} pushed to https://hub.docker.com/repository/docker/chamikajay/spring-book-api/general :shydocker: "}'
           ${{ secrets.SLACK_WEBHOOK_URL}}
 
       # Step 9: Update AWS configuration file with new image tag using sed command (a stream editor for filtering and transforming text) to replace the Docker image tag in the file with the build number generated in a previous step.

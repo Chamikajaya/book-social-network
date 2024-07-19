@@ -138,7 +138,7 @@
 
                     <to>
                         <!-- MAKE SURE TO DEFINE THESE VARIABLES ABOVE in properties-->
-                        <image>docker.io/${docker.username}/${docker.image.name}:${project.version}</image>
+                        <image>docker.io/${docker.username}/${docker.image.name}:${docker.image.tag}</image>
                         <tags>
                             <!-- image will be tagged as latest-->
                             <tag>latest</tag>
