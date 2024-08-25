@@ -52,4 +52,10 @@ Key steps in the pipeline:
 5. **Notifications**:
    - Sends Slack notifications at various stages of the deployment process.
 
+[Watch the CD pipeline overview on YouTube](https://www.youtube.com/watch?v=vGtguFR-bpk)
+
+
+
+https://github.com/user-attachments/assets/f4e6f74c-c7ca-402f-b78b-229a05e58755
+
 
