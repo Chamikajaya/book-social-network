@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/ping")
+@RequestMapping("ping")
 public class PingController {
 
     @GetMapping
     public String sayPong() {
-        return "I love DevOps. Pong Pong Pong";
+        return "I love DevOps. I ❤️❤️❤️ DevOps. Pong Pong Pong";
     }
 
 }
