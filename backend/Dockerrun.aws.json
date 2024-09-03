@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "spring-api",
-      "image": "chamikajay/spring-book-api:03.09.2024.09.56.22",
+      "image": "chamikajay/spring-book-api:03.09.2024.10.07.35",
       "essential": true,
       "memory": 512,
       "portMappings": [
