@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // disable CSRF since we are using JWT (Cross-Site Request Forgery)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(
-                                        "ping/",
+                                        "ping",
                                         "/auth/**",
                                         // Swagger related -->
                                         "/v2/api-docs",
