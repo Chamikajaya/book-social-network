@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
+// * Contains the config for security - Spring Security
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -44,7 +47,7 @@ public class SecurityConfig {
                                         "/swagger-ui/**",
                                         "/webjars/**",
                                         "/swagger-ui.html"
-                                ).permitAll()
+                                ).permitAll()  // allow the above requests, but deny the rest
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // do not store session state since we are using JWT

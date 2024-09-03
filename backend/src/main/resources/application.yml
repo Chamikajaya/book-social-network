@@ -59,7 +59,7 @@ application:
 
   mailing:
     frontend:
-      activation-url: http://localhost:3000/activate-account
+      activation-url: http://localhost:3000/activate-account  # TODO: Change this to the actual frontend URL if a frontend is implemented. 🥹🥹🥹
 
   file:
     upload:

@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import java.util.ArrayList;
+
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")  // to provide the currently logged-in user for auditing purposes
 @EnableAsync
@@ -21,6 +23,10 @@ public class BooksProjectApplication {
     @Bean
     public CommandLineRunner commandLineRunner(RoleRepository roleRepository) {
         return args -> {
+
+            ArrayList<Integer> myArr = new ArrayList<>();
+
+
 
             if (roleRepository.findByRoleName("USER").isEmpty())
                 roleRepository.save(
