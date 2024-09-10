@@ -11,7 +11,7 @@ public class PingController {
 
     @GetMapping
     public String sayPong() {
-        return "I love DevOps. I ❤️❤️❤️ DevOps. Pong Pong Pong";
+        return " I ❤️❤️❤️ DevOps. Pong Pong Pong";
     }
 
 }

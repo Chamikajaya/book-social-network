@@ -24,9 +24,6 @@ public class BooksProjectApplication {
     public CommandLineRunner commandLineRunner(RoleRepository roleRepository) {
         return args -> {
 
-            ArrayList<Integer> myArr = new ArrayList<>();
-
-
 
             if (roleRepository.findByRoleName("USER").isEmpty())
                 roleRepository.save(

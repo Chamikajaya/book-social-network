@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 @Slf4j
+
 public class DefaultExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)

@@ -13,6 +13,8 @@ import java.io.IOException;
 
 @Component
 // when a client sends a request to a protected endpoint without valid authentication credentials, the commence method of DelegatedAuthEntryPoint class is invoked.
+// ! useful for customizing the response sent to the client when authentication fails.
+
 public class DelegatedAuthEntryPoint implements AuthenticationEntryPoint {  // * AuthenticationEntryPoint is the first point of contact for the incoming request. It is called when the user is not authenticated.
 
     private final HandlerExceptionResolver handlerExceptionResolver;

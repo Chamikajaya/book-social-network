@@ -48,7 +48,7 @@ public class Book {
 
     private String coverImage;
 
-    private Boolean isArchived = false;
+    private Boolean isArchived = false;  // Soft delete
 
     private Boolean isShareable = true;
 

@@ -22,21 +22,21 @@ services:
       - "1080:1080"  # HTTP Web UI
       - "1025:1025"  # SMTP Server
 
-  project-api:
-    container_name: project_api_books_project
-    image: chamikajay/spring-book-api
-    ports:
-      - "8080:8080"
-    networks:
-      - book-project-network
-    depends_on:
-      - postgres
-      - mail-dev
-    volumes:
-      - api-storage:/app/storage
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/books-network
-
+#  project-api:
+#    container_name: project_api_books_project
+#    image: chamikajay/spring-book-api
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - book-project-network
+#    depends_on:
+#      - postgres
+#      - mail-dev
+#    volumes:
+#      - api-storage:/app/storage
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/books-network
+#
 
 
 

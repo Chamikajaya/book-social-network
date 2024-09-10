@@ -13,6 +13,7 @@ import com.chamika.books_project.user.User;
 import com.chamika.books_project.user.UserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -58,7 +60,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(registerRequestBody.password()))  // hashing using bcrypt
                 .roles(roleRepository.findByRoleName("USER").stream().collect(Collectors.toList()))
                 .isAccountLocked(false)
-                .isEnabled(false)  // since user has not verified the email
+                .isEnabled(false)  // since user has not verified the email yet
                 .build();
 
         userRepository.save(user);
@@ -68,6 +70,7 @@ public class AuthService {
     }
 
     private void sendVerificationEmail(User user) throws MessagingException {
+
         String verificationToken = generateAndSaveVerificationTokenToDb(user);
         emailService.sendEmail(
                 user.getEmail(),

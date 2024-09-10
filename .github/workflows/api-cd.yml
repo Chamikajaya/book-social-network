@@ -9,7 +9,7 @@ on:
     paths: [ 'backend/**' ]  # Only runs if changes are in this directory
 
 permissions:
-  contents: write
+  contents: write  # because GitHub actions will commit the latest docker-run.aws.json file at the final step of the workflow
 
 jobs:
   deploy:
